@@ -1,0 +1,4 @@
+enum EnumLogTypeGroup {
+  production,
+  debug,
+}
