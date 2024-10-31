@@ -126,9 +126,10 @@ class LogManager {
 
     if (logInfo.stacktraceString != null) {
       stacktraceString += '\n';
-      stacktraceString +=
-          '• ${logInfo.logType == EnumLogType.fatal ? 'Fatal ' : ''}Error${(logInfo.reason != null) ? ': ${logInfo.reason}' : ''}\n';
-      stacktraceString += _getColorRed('${logInfo.stacktraceString}');
+      stacktraceString += _getColorRed(
+              '• ${logInfo.logType == EnumLogType.fatal ? 'Fatal ' : ''}Error${(logInfo.reason != null) ? ': ${logInfo.reason}' : ''}') +
+          ('\n');
+      stacktraceString += '${logInfo.stacktraceString}';
     }
 
     log = log.replaceAll("{STACK_TRACE}", stacktraceString);
