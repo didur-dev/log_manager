@@ -117,10 +117,10 @@ class LogManager {
   String _formatLog(LogInfo logInfo) {
     var log = _logFormat
         .replaceAll("{DATE_TIME}", logInfo.dateTime.toString())
-        .replaceAll("{LOG_TYPE}", logInfo.logType!.name.toUpperCase())
+        .replaceAll("{LOG_TYPE}", coloredLogType(logInfo.logType!))
         .replaceAll("{CLASS_NAME}", logInfo.className ?? "")
         .replaceAll("{METHOD_NAME}", logInfo.methodName ?? "")
-        .replaceAll("{MESSAGE}", logInfo.message ?? "");
+        .replaceAll("{MESSAGE}", coloredMessage(logInfo.message ?? ""));
 
     var stacktraceString = "";
 
@@ -128,7 +128,7 @@ class LogManager {
       stacktraceString += '\n';
       stacktraceString +=
           '• ${logInfo.logType == EnumLogType.fatal ? 'Fatal ' : ''}Error${(logInfo.reason != null) ? ': ${logInfo.reason}' : ''}\n';
-      stacktraceString += '${logInfo.stacktraceString}';
+      stacktraceString += _getColorRed('${logInfo.stacktraceString}');
     }
 
     log = log.replaceAll("{STACK_TRACE}", stacktraceString);
@@ -165,5 +165,49 @@ class LogManager {
       log.className = 'UnknownClass';
       log.methodName = 'UnknownMethod';
     }
+  }
+
+  coloredMessage(String message) {
+    return _getColorBlue(message);
+  }
+
+  coloredLogType(EnumLogType logType) {
+    var name = logType.name.toUpperCase();
+    switch (logType) {
+      case EnumLogType.error:
+        return _getColorRed(name);
+      case EnumLogType.warning:
+        return _getColorYellow(name);
+      case EnumLogType.info:
+        return _getColorGreen(name);
+      default:
+        return name;
+    }
+  }
+
+  _getColorRed(String text) {
+    if (!kDebugMode) return text;
+    return "\x1B[38;5;9m$text\x1B[0m";
+  }
+
+  _getColorYellow(String text) {
+    if (!kDebugMode) return text;
+    return "\x1B[38;5;11m$text\x1B[0m";
+  }
+
+  _getColorGreen(String text) {
+    if (!kDebugMode) return text;
+    return "\x1B[38;5;10m$text\x1B[0m";
+  }
+
+  _getColorCyan(String text) {
+    if (!kDebugMode) return text;
+    return "\x1B[38;5;14m$text\x1B[0m";
+  }
+
+  _getColorBlue(String? text) {
+    if (text == null) return "";
+    if (!kDebugMode) return text;
+    return "\x1B[38;5;12m$text\x1B[0m";
   }
 }
