@@ -119,8 +119,11 @@ class LogManager {
         .replaceAll("{DATE_TIME}", logInfo.dateTime.toString())
         .replaceAll("{LOG_TYPE}", coloredLogType(logInfo.logType!))
         .replaceAll("{CLASS_NAME}", logInfo.className ?? "")
-        .replaceAll("{METHOD_NAME}", logInfo.methodName ?? "")
-        .replaceAll("{MESSAGE}", coloredMessage(logInfo.message ?? ""));
+        .replaceAll("{METHOD_NAME}", logInfo.methodName ?? "");
+
+    String message = coloredMessage(logInfo.message ?? "");
+
+    log = log.replaceAll("{MESSAGE}", isError(logInfo.logType!) ? '\n$message' : message);
 
     var stacktraceString = "";
 
@@ -166,6 +169,10 @@ class LogManager {
       log.className = 'UnknownClass';
       log.methodName = 'UnknownMethod';
     }
+  }
+
+  bool isError(EnumLogType logType) {
+    return logType == EnumLogType.error || logType == EnumLogType.fatal;
   }
 
   coloredMessage(String message) {

@@ -1,6 +1,6 @@
 name: log_manager
 description: "A log manager plugin"
-version: 0.2.1
+version: 0.2.2
 homepage: http://didur.dev.br
 
 environment:
